@@ -1,0 +1,4 @@
+storePassword=PREENCHER_FORA_DO_GIT
+keyPassword=PREENCHER_FORA_DO_GIT
+keyAlias=upload
+storeFile=C:/caminho-seguro/upload-keystore.jks

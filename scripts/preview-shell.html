@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MediShop Aluno — prévia Flutter</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#edf1f8;color:#172033;font-family:system-ui,sans-serif}
+header{max-width:1100px;margin:auto;padding:20px 24px 12px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:center}
+h1{margin:0;font-size:21px}p{margin:5px 0 0;color:#64748b;font-size:14px}
+.tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+button,select,a{font:inherit;font-size:14px;border:1px solid #d7dee8;border-radius:9px;background:white;color:#172033;padding:10px 12px;text-decoration:none}
+button{cursor:pointer}button:hover,a:hover{background:#e4ebff}button:focus-visible,a:focus-visible,select:focus-visible{outline:3px solid #315cfd;outline-offset:2px}
+.status{max-width:1100px;margin:0 auto;padding:0 24px 12px;font-size:13px;color:#64748b}
+main{display:flex;justify-content:center;padding:4px 16px 20px}
+.area{position:relative;flex-shrink:0}
+.device{position:absolute;left:0;top:0;padding:8px;background:#172033;border-radius:30px;box-shadow:0 16px 45px #1d35532b;transform-origin:top left}
+iframe{display:block;width:100%;height:100%;border:0;border-radius:22px;background:white}
+</style>
+</head>
+<body>
+<header id="toolbar">
+<div><h1>MediShop Aluno</h1><p>O app Flutter, executado no navegador.</p></div>
+<div class="tools">
+<label for="size">Tela</label>
+<select id="size"><option value="360,740">Compacta · 360 × 740</option><option value="390,844" selected>Padrão · 390 × 844</option><option value="430,932">Grande · 430 × 932</option></select>
+<button id="rotate" type="button">Girar</button><button id="reload" type="button">Recarregar</button>
+<a href="/app/" target="_blank" rel="noopener">Abrir sem moldura</a>
+</div></header>
+<div class="status" id="status" role="status">Conferindo conexão com a API…</div>
+<main><div class="area" id="area"><div class="device" id="device">
+<iframe id="app" src="/app/" title="Aplicativo Flutter do aluno" allow="clipboard-read; clipboard-write"></iframe>
+</div></div></main>
+<script>
+const sizes=document.getElementById('size'),device=document.getElementById('device'),area=document.getElementById('area');
+let rotated=false;
+function resize(){
+ let [w,h]=sizes.value.split(',').map(Number);
+ if(rotated)[w,h]=[h,w];
+ const top=document.querySelector('main').getBoundingClientRect().top;
+ const scale=Math.max(.2,Math.min(1,(innerWidth-32)/(w+16),(innerHeight-top-24)/(h+16)));
+ device.style.width=(w+16)+'px';device.style.height=(h+16)+'px';
+ device.style.transform='scale('+scale+')';
+ area.style.width=((w+16)*scale)+'px';area.style.height=((h+16)*scale)+'px';
+}
+async function health(){
+ const status=document.getElementById('status');
+ try{const response=await fetch('/preview-health',{cache:'no-store'});
+ if(!response.ok)throw Error();
+ status.textContent='API conectada · Use sua conta do site. Compras continuam no site.';status.style.color='#166534';
+ }catch{status.textContent='API indisponível · Inicie os serviços do PIM4API e clique em Recarregar.';status.style.color='#b45309'}
+ resize();
+}
+sizes.addEventListener('change',resize);
+document.getElementById('rotate').onclick=()=>{rotated=!rotated;resize()};
+document.getElementById('reload').onclick=()=>{document.getElementById('app').src='/app/';health()};
+addEventListener('resize',resize);resize();health();
+</script>
+</body></html>
