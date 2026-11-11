@@ -3,11 +3,11 @@ import 'package:flutter/foundation.dart';
 class AppConfig {
   static const apiUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://10.0.2.2:5278/',
+    defaultValue: 'https://pim4-api-demo.onrender.com/',
   );
   static const siteUrl = String.fromEnvironment(
     'WEB_BASE_URL',
-    defaultValue: 'http://10.0.2.2:4200/',
+    defaultValue: 'https://pim4front.onrender.com/',
   );
 
   static Uri get api => validate(apiUrl);

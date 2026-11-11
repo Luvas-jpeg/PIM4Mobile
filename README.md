@@ -1,5 +1,13 @@
 # PIM4Mobile — MediShop Aluno
 
+## Download para Android
+
+Baixe o [APK pronto para instalar](https://github.com/Luvas-jpeg/PIM4Mobile/releases/download/v1.0.0-demo.20261111/MediShop-Aluno-Android.apk). As versões ficam em [Releases](https://github.com/Luvas-jpeg/PIM4Mobile/releases).
+
+O APK de demonstração já usa a API `https://pim4-api-demo.onrender.com/` e abre o site `https://pim4front.onrender.com/` para catálogo e compras. Entre com uma conta de aluno existente. É um build debug para instalação direta, sem credenciais embutidas. As operações utilizam os dados do Render.
+
+O CI executa análise, testes e build do APK. Tags `v*` publicam os downloads, checksums e identificação da compilação em GitHub Releases. A assinatura de distribuição de builds release continua sendo configurada separadamente.
+
 Aplicativo Flutter para **Android**, destinado ao aluno da plataforma de cursos.
 Reutiliza a conta e a API do site. O escopo desta primeira versão foi definido como
 login, matrículas, informações das turmas, pedidos e perfil; **as compras são feitas no site**.
@@ -122,8 +130,8 @@ As URLs são recebidas em tempo de compilação:
 
 | Chave | Padrão de desenvolvimento |
 | --- | --- |
-| API_BASE_URL | http://10.0.2.2:5278/ |
-| WEB_BASE_URL | http://10.0.2.2:4200/ |
+| API_BASE_URL | https://pim4-api-demo.onrender.com/ |
+| WEB_BASE_URL | https://pim4front.onrender.com/ |
 
 Informe a **raiz** da API, sem acrescentar `/api`. O cliente compõe esse prefixo.
 Não coloque tokens, senhas do banco ou segredos de pagamento em dart-define.

@@ -2,10 +2,15 @@ name: Flutter CI
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
     branches: [main]
+  workflow_dispatch:
 permissions:
   contents: read
+env:
+  API_BASE_URL: https://pim4-api-demo.onrender.com/
+  WEB_BASE_URL: https://pim4front.onrender.com/
 jobs:
   validate:
     runs-on: ubuntu-latest
@@ -23,4 +28,36 @@ jobs:
       - run: flutter pub get
       - run: flutter analyze
       - run: flutter test
-      - run: flutter build apk --debug --dart-define=API_BASE_URL=https://example.com/ --dart-define=WEB_BASE_URL=https://example.com/
+      - name: Build Android demo with Render configuration
+        run: flutter build apk --debug --dart-define=API_BASE_URL="$API_BASE_URL" --dart-define=WEB_BASE_URL="$WEB_BASE_URL"
+      - name: Package APK and checksums
+        run: python3 scripts/package-download.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: medishop-aluno-android
+          path: downloads/
+          if-no-files-found: error
+          retention-days: 14
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: validate
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: medishop-aluno-android
+          path: downloads
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh release create "$GITHUB_REF_NAME"
+          downloads/MediShop-Aluno-Android.apk
+          downloads/SHA256SUMS.txt
+          downloads/build-info.json
+          --target "$GITHUB_SHA" --title "MediShop Aluno — $GITHUB_REF_NAME"
+          --prerelease --notes-file docs/RELEASE-NOTES.md
